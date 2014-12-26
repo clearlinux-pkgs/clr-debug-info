@@ -1,0 +1,3 @@
+mkdir %{buildroot}/usr/lib/systemd/system/multi-user.target.wants
+ln -s ../clr_debug_fuse.service %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/clr_debug_fuse.service
+ln -s ../clr_debug_daemon.service %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/clr_debug_daemon.service
