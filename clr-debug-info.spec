@@ -4,7 +4,7 @@
 #
 Name     : clr-debug-info
 Version  : 43
-Release  : 58
+Release  : 59
 URL      : http://localhost/cgit/projects/clr-debug-info/snapshot/clr-debug-info-43.tar.gz
 Source0  : http://localhost/cgit/projects/clr-debug-info/snapshot/clr-debug-info-43.tar.gz
 Summary  : No detailed summary available
