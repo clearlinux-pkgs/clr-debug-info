@@ -4,7 +4,7 @@
 #
 Name     : clr-debug-info
 Version  : 44
-Release  : 60
+Release  : 61
 URL      : http://localhost/cgit/projects/clr-debug-info/snapshot/clr-debug-info-44.tar.gz
 Source0  : http://localhost/cgit/projects/clr-debug-info/snapshot/clr-debug-info-44.tar.gz
 Summary  : No detailed summary available
@@ -13,6 +13,7 @@ License  : GPL-2.0
 Requires: clr-debug-info-bin
 Requires: clr-debug-info-config
 Requires: clr-debug-info-autostart
+Requires: clr-debug-info-data
 BuildRequires : pkgconfig(fuse)
 BuildRequires : pkgconfig(libcurl)
 BuildRequires : pkgconfig(systemd)
@@ -31,6 +32,7 @@ autostart components for the clr-debug-info package.
 %package bin
 Summary: bin components for the clr-debug-info package.
 Group: Binaries
+Requires: clr-debug-info-data
 Requires: clr-debug-info-config
 
 %description bin
@@ -45,6 +47,14 @@ Group: Default
 config components for the clr-debug-info package.
 
 
+%package data
+Summary: data components for the clr-debug-info package.
+Group: Data
+
+%description data
+data components for the clr-debug-info package.
+
+
 %prep
 %setup -q -n clr-debug-info-44
 
@@ -53,7 +63,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1512915974
+export SOURCE_DATE_EPOCH=1516647479
 export CFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
 export FCFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
 export FFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
@@ -69,13 +79,16 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1512915974
+export SOURCE_DATE_EPOCH=1516647479
 rm -rf %{buildroot}
 %make_install
 ## make_install_append content
 mkdir %{buildroot}/usr/lib/systemd/system/multi-user.target.wants
 ln -s ../clr_debug_fuse.service %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/clr_debug_fuse.service
 ln -s ../clr_debug_daemon.service %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/clr_debug_daemon.service
+mkdir -p %{buildroot}/usr/share/clr-service-restart
+ln -sf /usr/lib/systemd/system/clr_debug_fuse.service %{buildroot}/usr/share/clr-service-restart/clr_debug_fuse.service
+ln -sf /usr/lib/systemd/system/clr_debug_daemon.service %{buildroot}/usr/share/clr-service-restart/clr_debug_daemon.service
 ## make_install_append end
 
 %files
@@ -99,3 +112,8 @@ ln -s ../clr_debug_daemon.service %{buildroot}/usr/lib/systemd/system/multi-user
 /usr/lib/systemd/system/clr_debug_daemon.service
 /usr/lib/systemd/system/clr_debug_fuse.service
 /usr/lib/tmpfiles.d/debuginfo.conf
+
+%files data
+%defattr(-,root,root,-)
+/usr/share/clr-service-restart/clr_debug_daemon.service
+/usr/share/clr-service-restart/clr_debug_fuse.service
