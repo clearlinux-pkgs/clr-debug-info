@@ -4,7 +4,7 @@
 #
 Name     : clr-debug-info
 Version  : 45
-Release  : 64
+Release  : 65
 URL      : http://localhost/cgit/projects/clr-debug-info/snapshot/clr-debug-info-45.tar.gz
 Source0  : http://localhost/cgit/projects/clr-debug-info/snapshot/clr-debug-info-45.tar.gz
 Summary  : No detailed summary available
@@ -64,7 +64,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1526565378
+export SOURCE_DATE_EPOCH=1526591212
 export CFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
 export FCFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
 export FFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-semantic-interposition "
@@ -80,13 +80,15 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1526565378
+export SOURCE_DATE_EPOCH=1526591212
 rm -rf %{buildroot}
 %make_install
 ## make_install_append content
 mkdir %{buildroot}/usr/lib/systemd/system/multi-user.target.wants
 ln -s ../clr_debug_fuse.service %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/clr_debug_fuse.service
 ln -s ../clr_debug_daemon.service %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/clr_debug_daemon.service
+mkdir %{buildroot}/usr/lib/systemd/system/sockets.target.wants
+ln -s ../clr_debug_daemon.socket %{buildroot}/usr/lib/systemd/system/sockets.target.wants/clr_debug_daemon.socket
 mkdir -p %{buildroot}/usr/share/clr-service-restart
 ln -sf /usr/lib/systemd/system/clr_debug_fuse.service %{buildroot}/usr/share/clr-service-restart/clr_debug_fuse.service
 ln -sf /usr/lib/systemd/system/clr_debug_daemon.service %{buildroot}/usr/share/clr-service-restart/clr_debug_daemon.service
@@ -99,6 +101,7 @@ ln -sf /usr/lib/systemd/system/clr_debug_daemon.service %{buildroot}/usr/share/c
 %defattr(-,root,root,-)
 /usr/lib/systemd/system/multi-user.target.wants/clr_debug_daemon.service
 /usr/lib/systemd/system/multi-user.target.wants/clr_debug_fuse.service
+/usr/lib/systemd/system/sockets.target.wants/clr_debug_daemon.socket
 
 %files bin
 %defattr(-,root,root,-)
@@ -110,6 +113,7 @@ ln -sf /usr/lib/systemd/system/clr_debug_daemon.service %{buildroot}/usr/share/c
 %defattr(-,root,root,-)
 %exclude /usr/lib/systemd/system/multi-user.target.wants/clr_debug_daemon.service
 %exclude /usr/lib/systemd/system/multi-user.target.wants/clr_debug_fuse.service
+%exclude /usr/lib/systemd/system/sockets.target.wants/clr_debug_daemon.socket
 /usr/lib/systemd/system/clr_debug_daemon.service
 /usr/lib/systemd/system/clr_debug_daemon.socket
 /usr/lib/systemd/system/clr_debug_fuse.service

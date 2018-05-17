@@ -1,6 +1,8 @@
 mkdir %{buildroot}/usr/lib/systemd/system/multi-user.target.wants
 ln -s ../clr_debug_fuse.service %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/clr_debug_fuse.service
 ln -s ../clr_debug_daemon.service %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/clr_debug_daemon.service
+mkdir %{buildroot}/usr/lib/systemd/system/sockets.target.wants
+ln -s ../clr_debug_daemon.socket %{buildroot}/usr/lib/systemd/system/sockets.target.wants/clr_debug_daemon.socket
 mkdir -p %{buildroot}/usr/share/clr-service-restart
 ln -sf /usr/lib/systemd/system/clr_debug_fuse.service %{buildroot}/usr/share/clr-service-restart/clr_debug_fuse.service
 ln -sf /usr/lib/systemd/system/clr_debug_daemon.service %{buildroot}/usr/share/clr-service-restart/clr_debug_daemon.service
