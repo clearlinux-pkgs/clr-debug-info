@@ -4,7 +4,7 @@
 #
 Name     : clr-debug-info
 Version  : 50
-Release  : 71
+Release  : 72
 URL      : https://github.com/clearlinux/clr-debug-info/archive/50/clr-debug-info-50.tar.gz
 Source0  : https://github.com/clearlinux/clr-debug-info/archive/50/clr-debug-info-50.tar.gz
 Summary  : No detailed summary available
@@ -20,6 +20,7 @@ BuildRequires : pkgconfig(fuse)
 BuildRequires : pkgconfig(libcurl)
 BuildRequires : pkgconfig(libsystemd)
 BuildRequires : pkgconfig(systemd)
+BuildRequires : util-linux
 
 %description
 No detailed description available
@@ -78,13 +79,14 @@ services components for the clr-debug-info package.
 
 %prep
 %setup -q -n clr-debug-info-50
+cd %{_builddir}/clr-debug-info-50
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1559774592
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1572474912
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
 export FCFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
@@ -94,25 +96,29 @@ export CXXFLAGS="$CXXFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno
 make  %{?_smp_mflags}
 
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1559774592
+export SOURCE_DATE_EPOCH=1572474912
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/clr-debug-info
-cp COPYING %{buildroot}/usr/share/package-licenses/clr-debug-info/COPYING
+cp %{_builddir}/clr-debug-info-50/COPYING %{buildroot}/usr/share/package-licenses/clr-debug-info/4cc77b90af91e615a64ae04893fdffa7939db84c
 %make_install
+## service_restart content
+mkdir -p %{buildroot}/usr/share/clr-service-restart
+ln -s /usr/lib/systemd/system/clr_debug_fuse.service %{buildroot}/usr/share/clr-service-restart/clr_debug_fuse.service
+## service_restart end
+## Remove excluded files
+rm -f %{buildroot}/usr/bin/clr_debug_prepare
 ## install_append content
 mkdir %{buildroot}/usr/lib/systemd/system/multi-user.target.wants
 ln -s ../clr_debug_fuse.service %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/clr_debug_fuse.service
 mkdir %{buildroot}/usr/lib/systemd/system/sockets.target.wants
 ln -s ../clr_debug_daemon.socket %{buildroot}/usr/lib/systemd/system/sockets.target.wants/clr_debug_daemon.socket
-mkdir -p %{buildroot}/usr/share/clr-service-restart
-ln -sf /usr/lib/systemd/system/clr_debug_fuse.service %{buildroot}/usr/share/clr-service-restart/clr_debug_fuse.service
 ## install_append end
 
 %files
@@ -125,7 +131,6 @@ ln -sf /usr/lib/systemd/system/clr_debug_fuse.service %{buildroot}/usr/share/clr
 
 %files bin
 %defattr(-,root,root,-)
-%exclude /usr/bin/clr_debug_prepare
 /usr/bin/clr_debug_daemon
 /usr/bin/clr_debug_fuse
 
@@ -139,7 +144,7 @@ ln -sf /usr/lib/systemd/system/clr_debug_fuse.service %{buildroot}/usr/share/clr
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/clr-debug-info/COPYING
+/usr/share/package-licenses/clr-debug-info/4cc77b90af91e615a64ae04893fdffa7939db84c
 
 %files services
 %defattr(-,root,root,-)
