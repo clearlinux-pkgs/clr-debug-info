@@ -4,7 +4,7 @@
 #
 Name     : clr-debug-info
 Version  : 51
-Release  : 73
+Release  : 74
 URL      : https://github.com/clearlinux/clr-debug-info/archive/51/clr-debug-info-51.tar.gz
 Source0  : https://github.com/clearlinux/clr-debug-info/archive/51/clr-debug-info-51.tar.gz
 Summary  : No detailed summary available
@@ -85,11 +85,11 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1573683083
+export SOURCE_DATE_EPOCH=1605120125
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
-export FCFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
-export FFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
+export FCFLAGS="$FFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
+export FFLAGS="$FFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
 export CXXFLAGS="$CXXFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
 %autogen --disable-static
 make  %{?_smp_mflags}
@@ -99,10 +99,10 @@ export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-make VERBOSE=1 V=1 %{?_smp_mflags} check
+make %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1573683083
+export SOURCE_DATE_EPOCH=1605120125
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/clr-debug-info
 cp %{_builddir}/clr-debug-info-51/COPYING %{buildroot}/usr/share/package-licenses/clr-debug-info/4cc77b90af91e615a64ae04893fdffa7939db84c
