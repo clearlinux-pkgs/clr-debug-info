@@ -4,7 +4,7 @@
 #
 Name     : clr-debug-info
 Version  : 52
-Release  : 75
+Release  : 76
 URL      : https://github.com/clearlinux/clr-debug-info/archive/52/clr-debug-info-52.tar.gz
 Source0  : https://github.com/clearlinux/clr-debug-info/archive/52/clr-debug-info-52.tar.gz
 Summary  : No detailed summary available
@@ -20,6 +20,9 @@ BuildRequires : pkgconfig(fuse)
 BuildRequires : pkgconfig(libcurl)
 BuildRequires : pkgconfig(libsystemd)
 BuildRequires : pkgconfig(systemd)
+# Suppress stripping binaries
+%define __strip /bin/true
+%define debug_package %{nil}
 
 %description
 No detailed description available
@@ -85,12 +88,12 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1615862187
+export SOURCE_DATE_EPOCH=1672256181
 export GCC_IGNORE_WERROR=1
-export CFLAGS="$CFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
-export FCFLAGS="$FFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
-export FFLAGS="$FFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
-export CXXFLAGS="$CXXFLAGS -Os -fdata-sections -ffunction-sections -fno-lto -fno-semantic-interposition "
+export CFLAGS="$CFLAGS -Os -fdata-sections -fdebug-types-section -femit-struct-debug-baseonly -ffunction-sections -fno-lto -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz "
+export FCFLAGS="$FFLAGS -Os -fdata-sections -fdebug-types-section -femit-struct-debug-baseonly -ffunction-sections -fno-lto -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz "
+export FFLAGS="$FFLAGS -Os -fdata-sections -fdebug-types-section -femit-struct-debug-baseonly -ffunction-sections -fno-lto -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz "
+export CXXFLAGS="$CXXFLAGS -Os -fdata-sections -fdebug-types-section -femit-struct-debug-baseonly -ffunction-sections -fno-lto -fno-semantic-interposition -g1 -gno-column-info -gno-variable-location-views -gz "
 %autogen --disable-static
 make  %{?_smp_mflags}
 
@@ -102,17 +105,17 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1615862187
+export SOURCE_DATE_EPOCH=1672256181
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/clr-debug-info
-cp %{_builddir}/clr-debug-info-52/COPYING %{buildroot}/usr/share/package-licenses/clr-debug-info/4cc77b90af91e615a64ae04893fdffa7939db84c
+cp %{_builddir}/clr-debug-info-%{version}/COPYING %{buildroot}/usr/share/package-licenses/clr-debug-info/4cc77b90af91e615a64ae04893fdffa7939db84c
 %make_install
 ## service_restart content
 mkdir -p %{buildroot}/usr/share/clr-service-restart
 ln -s /usr/lib/systemd/system/clr_debug_fuse.service %{buildroot}/usr/share/clr-service-restart/clr_debug_fuse.service
 ## service_restart end
 ## Remove excluded files
-rm -f %{buildroot}/usr/bin/clr_debug_prepare
+rm -f %{buildroot}*/usr/bin/clr_debug_prepare
 ## install_append content
 mkdir %{buildroot}/usr/lib/systemd/system/multi-user.target.wants
 ln -s ../clr_debug_fuse.service %{buildroot}/usr/lib/systemd/system/multi-user.target.wants/clr_debug_fuse.service
